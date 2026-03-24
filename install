@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+
+#  _                      ____            _                    
+# | |    __ _ _____   _  |  _ \ __ _  ___| | ____ _  __ _  ___ 
+# | |   / _` |_  / | | | | |_) / _` |/ __| |/ / _` |/ _` |/ _ \
+# | |__| (_| |/ /| |_| | |  __/ (_| | (__|   < (_| | (_| |  __/
+# |_____\__,_/___|\__, | |_|   \__,_|\___|_|\_\__,_|\__, |\___|
+#                 |___/                             |___/      
+#
+# A unified package manager interface for linux systems
+#
+# Author: Andrianos Papamarkou
+# email: papamarkoua@gmail.com
+# web: https://github.com/apapamarkou/lazy-package
+#
+
+set -euo pipefail
+
+# lazy-package installer
+# Usage: curl -fsSL https://raw.githubusercontent.com/apapamarkou/lazy-package/main/install | bash
+
+REPO_URL="https://github.com/apapamarkou/lazy-package.git"
+INSTALL_DIR="$HOME/.local/share/lazy-package"
+BIN_DIR="$HOME/.local/bin"
+DESKTOP_DIR="$HOME/.local/share/applications"
+
+echo "Installing lazy-package..."
+
+if ! command -v git &>/dev/null; then
+    echo -n "git is required. Install it? (Y/N): "
+    read -n 1 -r response; echo
+    if [[ "$response" =~ ^[Yy]$ ]]; then
+        if command -v pacman &>/dev/null; then sudo pacman -S --needed git
+        elif command -v apt-get &>/dev/null; then sudo apt-get install -y git
+        elif command -v dnf &>/dev/null; then sudo dnf install -y git
+        elif command -v zypper &>/dev/null; then sudo zypper install -y git
+        fi
+    else
+        echo "Installation cancelled."
+        exit 1
+    fi
+fi
+
+if [[ -d "$INSTALL_DIR" ]]; then
+    echo "Updating existing installation..."
+    cd "$INSTALL_DIR" && git pull
+    find . -maxdepth 1 -not -name '.' -not -name '..' -not -name 'src' -not -name 'uninstall' -not -name '.git' -exec rm -rf {} +
+else
+    echo "Cloning repository..."
+    git clone "$REPO_URL" "$INSTALL_DIR"
+    cd "$INSTALL_DIR"
+    find . -maxdepth 1 -not -name '.' -not -name '..' -not -name 'src' -not -name 'uninstall' -not -name '.git' -exec rm -rf {} +
+fi
+
+mkdir -p "$BIN_DIR"
+ln -sf "$INSTALL_DIR/src/pkg" "$BIN_DIR/pkg"
+chmod +x "$INSTALL_DIR/src/pkg"
+
+# Create .desktop file
+mkdir -p "$DESKTOP_DIR"
+cat > "$DESKTOP_DIR/lazy-package.desktop" << EOF
+[Desktop Entry]
+Name=lazy-package
+Comment=Fast TUI package manager wrapper
+Exec=$HOME/.local/bin/pkg
+Icon=system-software-install
+Terminal=true
+Type=Application
+Categories=System;PackageManager;
+EOF
+
+echo
+echo "✓ Installation complete! Run 'pkg' to start."
+
+if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+    echo
+    echo "Adding $HOME/.local/bin to PATH..."
+    
+    PROFILE_FILE="$HOME/.profile"
+    PATH_EXPORT='export PATH="$HOME/.local/bin:$PATH"'
+    
+    if [[ ! -f "$PROFILE_FILE" ]] || ! grep -qF "$HOME/.local/bin" "$PROFILE_FILE"; then
+        echo "$PATH_EXPORT" >> "$PROFILE_FILE"
+        echo "✓ Added to $PROFILE_FILE"
+    fi
+    
+    export PATH="$HOME/.local/bin:$PATH"
+    echo "✓ PATH updated for current session"
+else
+    echo "  $BIN_DIR is already in your PATH."
+fi

@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+#  _                          ____            _
+# | |    __ _ _____   _      |  _ \ __ _  ___| | ____ _  __ _  ___
+# | |   / _` |_  / | | |_____| |_) / _` |/ __| |/ / _` |/ _` |/ _ \
+# | |__| (_| |/ /| |_| |_____|  __/ (_| | (__|   < (_| | (_| |  __/
+# |_____\__,_/___|\__, |     |_|   \__,_|\___|_|\_\__,_|\__, |\___|
+#                 |___/                                  |___/
+#
+# Fast TUI + CLI package manager wrapper
+# Supports: pacman/yay, apt, dnf, zypper
+# Author: Andrianos Papamarkou
+
+SOURCE="${BASH_SOURCE[0]}"
+while [ -L "$SOURCE" ]; do
+  DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+MODULE_DIR="$SCRIPT_DIR"
+
+# shellcheck source=core/loader.sh
+# shellcheck disable=SC1091
+source "$MODULE_DIR/core/loader.sh"
+
+require core/config
+require core/colors
+require core/utils
+require core/prompt
+require core/packager
+require cache/cache
+require system/dependencies
+require system/updates
+require system/orphan_cleaner
+require tui/preview
+require tui/actions
+require tui/tui
+require cli/help
+require cli/commands
+require cli/parser
+
+# Check dependencies (offers to install missing ones)
+check_dependencies || exit 1
+
+if [[ $# -eq 0 ]]; then
+    launch_tui
+else
+    parse_cli "$@"
+fi

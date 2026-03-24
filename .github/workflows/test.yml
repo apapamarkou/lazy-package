@@ -1,0 +1,60 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - distro: archlinux:latest
+            pkg_manager: pacman
+            install_deps: pacman -Syu --noconfirm && pacman -S --noconfirm base-devel git fzf jq curl most
+          - distro: fedora:latest
+            pkg_manager: dnf
+            install_deps: dnf install -y git fzf jq curl bats
+          - distro: ubuntu:latest
+            pkg_manager: apt
+            install_deps: apt-get update && apt-get install -y git fzf jq curl bats
+
+    container:
+      image: ${{ matrix.distro }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: ${{ matrix.install_deps }}
+
+      - name: Install bats-core (Arch only)
+        if: matrix.pkg_manager == 'pacman'
+        run: |
+          git clone https://github.com/bats-core/bats-core.git /tmp/bats
+          /tmp/bats/install.sh /usr/local
+
+      - name: Install yay (Arch only)
+        if: matrix.pkg_manager == 'pacman'
+        run: |
+          useradd -m builder
+          echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+          su - builder -c "
+            git clone https://aur.archlinux.org/yay.git /tmp/yay
+            cd /tmp/yay
+            makepkg -si --noconfirm
+          "
+
+      - name: Run tests
+        run: make test
+
+      - name: Test summary
+        if: always()
+        run: |
+          echo "## Test Results — ${{ matrix.pkg_manager }}" >> $GITHUB_STEP_SUMMARY
+          echo "Distro: ${{ matrix.distro }}" >> $GITHUB_STEP_SUMMARY

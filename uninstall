@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+#  _                      ____            _                    
+# | |    __ _ _____   _  |  _ \ __ _  ___| | ____ _  __ _  ___ 
+# | |   / _` |_  / | | | | |_) / _` |/ __| |/ / _` |/ _` |/ _ \
+# | |__| (_| |/ /| |_| | |  __/ (_| | (__|   < (_| | (_| |  __/
+# |_____\__,_/___|\__, | |_|   \__,_|\___|_|\_\__,_|\__, |\___|
+#                 |___/                             |___/      
+#
+# A unified package manager interface for linux systems
+#
+# Author: Andrianos Papamarkou
+# email: papamarkoua@gmail.com
+# web: https://github.com/apapamarkou/lazy-package
+#
+
+set -euo pipefail
+
+echo "Uninstalling lazy-package..."
+
+[[ -L "$HOME/.local/bin/pkg" ]] && rm "$HOME/.local/bin/pkg" && echo "✓ Removed $HOME/.local/bin/pkg"
+
+[[ -f "$HOME/.local/share/applications/lazy-package.desktop" ]] && \
+    rm "$HOME/.local/share/applications/lazy-package.desktop" && \
+    echo "✓ Removed lazy-package.desktop"
+
+[[ -d "$HOME/.cache/lazy-package" ]] && \
+    rm -rf "$HOME/.cache/lazy-package" && echo "✓ Removed $HOME/.cache/lazy-package"
+
+if [[ -d "$HOME/.local/share/lazy-package" ]]; then
+    read -rp "Remove $HOME/.local/share/lazy-package? (Y/N): " confirm
+    if [[ "$confirm" =~ ^[Yy]$ ]]; then
+        rm -rf "$HOME/.local/share/lazy-package"
+        echo "✓ Removed $HOME/.local/share/lazy-package"
+    fi
+fi
+
+echo; echo "Uninstallation complete!"
