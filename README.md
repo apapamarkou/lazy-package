@@ -7,6 +7,9 @@
 Fast TUI + CLI package manager wrapper for Linux.
 Supports **pacman/yay** (Arch), **apt** (Debian/Ubuntu), **dnf** (Fedora/RHEL), **zypper** (openSUSE).
 
+> Every Linux distro ships with a different package manager, each with its own commands, flags, and quirks.
+> lazy-package aims to unify that experience — one interface, one set of commands, regardless of your distro.
+
 <img width="70%" alt="pkg" src="https://github.com/user-attachments/assets/94aa9b68-ecae-43ee-9f43-d9e716ea4d82" />
 
 ## Features
