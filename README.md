@@ -20,7 +20,7 @@ Supports **pacman/yay** (Arch), **apt** (Debian/Ubuntu), **dnf** (Fedora/RHEL), 
 - **Minimal Cache** — Lightweight cache (name + source only) for instant startup
 - **Lazy Preview** — Package details loaded on-demand for optimal performance
 - **Colored Preview** — Syntax-highlighted package info with dependency tree visualization
-- **AUR Support** — Seamless yay integration (pacman only)
+- **AUR Support** — Seamless yay integration (Arch only)
 - **Dependency Warnings** — Shows reverse dependencies before removal
 - **Update Notifications** — Lazy update checking every 6 hours
 - **Orphan Cleaning** — Easy removal of unused dependencies
@@ -51,16 +51,6 @@ The installer automatically adds `~/.local/bin` to your PATH if needed.
 ```bash
 git clone https://github.com/apapamarkou/lazy-package.git
 cd lazy-package
-export PATH="$PWD:$PATH"
-pkg
-```
-
-### Development (no install)
-
-```bash
-git clone https://github.com/apapamarkou/lazy-package.git
-cd lazy-package
-make link   # creates ./pkg symlink
 ./pkg
 ```
 
@@ -72,10 +62,10 @@ Common (all distros):
 - `curl` — HTTP client
 
 Per packager:
-- **pacman**: `pacman`, `yay`
-- **apt**: `apt-get` (pre-installed on Debian/Ubuntu)
-- **dnf**: `dnf` (pre-installed on Fedora)
-- **zypper**: `zypper` (pre-installed on openSUSE)
+- **Arch**: `pacman`, `yay`
+- **Debian**: `apt-get` (pre-installed on Debian/Ubuntu)
+- **Fedora**: `dnf` (pre-installed on Fedora)
+- **openSUSE**: `zypper` (pre-installed on openSUSE)
 
 Optional:
 - `most` — Pager (falls back to `less`)
