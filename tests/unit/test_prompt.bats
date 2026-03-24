@@ -5,32 +5,32 @@ load '../helpers/test_utils'
 
 setup() {
     setup_test_env
-    MODULE_DIR="$BATS_TEST_DIRNAME/../../src"
+    export MODULE_DIR="$BATS_TEST_DIRNAME/../../src"
     source "$MODULE_DIR/core/loader.sh"
     require core/prompt
 }
 
 @test "ask_yn returns true for Y" {
-    echo "Y" | run ask_yn "Test? (Y/N): "
+    run bash -c "source \"$MODULE_DIR/core/loader.sh\"; require core/prompt; echo Y | ask_yn 'Test?'"
     assert_success
 }
 
 @test "ask_yn returns true for y" {
-    echo "y" | run ask_yn "Test? (Y/N): "
+    run bash -c "source \"$MODULE_DIR/core/loader.sh\"; require core/prompt; echo y | ask_yn 'Test?'"
     assert_success
 }
 
 @test "ask_yn returns false for N" {
-    echo "N" | run ask_yn "Test? (Y/N): "
+    run bash -c "source \"$MODULE_DIR/core/loader.sh\"; require core/prompt; echo N | ask_yn 'Test?'"
     assert_failure
 }
 
 @test "ask_yn returns false for n" {
-    echo "n" | run ask_yn "Test? (Y/N): "
+    run bash -c "source \"$MODULE_DIR/core/loader.sh\"; require core/prompt; echo n | ask_yn 'Test?'"
     assert_failure
 }
 
 @test "ask_yn returns false for other input" {
-    echo "x" | run ask_yn "Test? (Y/N): "
+    run bash -c "source \"$MODULE_DIR/core/loader.sh\"; require core/prompt; echo x | ask_yn 'Test?'"
     assert_failure
 }

@@ -18,10 +18,14 @@
 ask_yn() {
     local prompt="$1"
     local key
-    
+
     echo -n "$prompt"
-    read -n 1 -r key < /dev/tty
+    if [[ -t 0 ]]; then
+        read -n 1 -r key < /dev/tty
+    else
+        read -r key
+    fi
     echo
-    
+
     [[ "$key" =~ ^[Yy]$ ]]
 }

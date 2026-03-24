@@ -1,5 +1,13 @@
 #!/usr/bin/env bats
 # shellcheck disable=SC1091,SC2317
+
+load '../helpers/test_utils'
+
+setup() {
+    setup_test_env
+    MODULE_DIR="$BATS_TEST_DIRNAME/../../src"
+    source "$MODULE_DIR/core/loader.sh"
+    require cli/parser
     require cli/help
 
     cli_install() { echo "install $*"; }
