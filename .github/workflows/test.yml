@@ -15,13 +15,13 @@ jobs:
         include:
           - distro: archlinux:latest
             pkg_manager: pacman
-            install_deps: pacman -Syu --noconfirm && pacman -S --noconfirm base-devel git fzf jq curl most
+            install_deps: pacman -Syu --noconfirm && pacman -S --noconfirm base-devel git fzf jq curl most make
           - distro: fedora:latest
             pkg_manager: dnf
-            install_deps: dnf install -y git fzf jq curl bats
+            install_deps: dnf install -y git fzf jq curl bats make
           - distro: ubuntu:latest
             pkg_manager: apt
-            install_deps: apt-get update && apt-get install -y git fzf jq curl bats
+            install_deps: apt-get update && apt-get install -y git fzf jq curl bats make
 
     container:
       image: ${{ matrix.distro }}
