@@ -17,6 +17,7 @@
 # PKGBUILD preview helper for fzf
 
 MODULE_DIR="${MODULE_DIR:-$(dirname "$0")}"
+# shellcheck source=src/core/loader.sh
 source "$MODULE_DIR/core/loader.sh"
 
 require tui/preview

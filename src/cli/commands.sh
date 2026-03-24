@@ -75,7 +75,7 @@ cli_info() {
 }
 
 cli_search() {
-    local term="$1" names_only="${2:-false}"
+    local term="$1"
     [[ -z "$term" ]] && { echo "Usage: pkg search <term>"; exit 1; }
 
     declare -A installed_map

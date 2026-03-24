@@ -27,6 +27,7 @@ require cache/cache
 require tui/actions
 
 clear
+# shellcheck disable=SC2016,SC1003
 echo '  _                      ____            _                    '
 echo ' | |    __ _ _____   _  |  _ \ __ _  ___| | ____ _  __ _  ___ '
 echo ' | |   / _` |_  / | | | | |_) / _` |/ __| |/ / _` |/ _` |/ _ \'

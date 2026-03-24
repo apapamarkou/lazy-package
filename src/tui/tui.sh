@@ -45,7 +45,7 @@ launch_tui() {
             --bind "enter:execute($MODULE_DIR/tui/fzf_action.sh {})+reload($MODULE_DIR/tui/fzf_list.sh)" \
             --bind "ctrl-u:execute($MODULE_DIR/tui/fzf_update.sh)" \
             --bind "ctrl-o:execute($MODULE_DIR/tui/fzf_orphans.sh)" \
-            ${pkgbuild_bind} \
+            ${pkgbuild_bind:+"${pkgbuild_bind}"} \
             --bind "ctrl-q:abort" \
             --bind "esc:abort")
 

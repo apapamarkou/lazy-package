@@ -75,7 +75,7 @@ aptCleanOrphans() {
     if [[ -z "$orphans" ]]; then echo "No orphan packages found."; return 0; fi
     echo "Orphan packages:"; echo "$orphans"; echo
     if ask_yn "Remove these packages? (Y/N): "; then
-        sudo apt-get remove $orphans
+        sudo apt-get remove "$orphans"
     else
         echo "Cancelled."
     fi
