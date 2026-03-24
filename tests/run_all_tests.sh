@@ -51,7 +51,7 @@ run_tests() {
     fi
     
     echo -e "${GREEN}Running $test_name tests...${RESET}"
-    if bats "$test_dir"/*.bats 2>/dev/null; then
+    if bats "$test_dir"/*.bats; then
         echo -e "${GREEN}✓ $test_name tests passed${RESET}"
         return 0
     else
