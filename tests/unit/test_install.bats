@@ -67,6 +67,7 @@ setup() {
 
 @test "install does not duplicate PATH export in .profile" {
     local profile="$TEST_HOME/.profile"
+    # shellcheck disable=SC2016
     echo 'export PATH="$HOME/.local/bin:$PATH"' > "$profile"
 
     run bash -c "
