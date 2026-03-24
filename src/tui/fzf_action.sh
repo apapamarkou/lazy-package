@@ -14,7 +14,7 @@
 # web: https://github.com/apapamarkou/lazy-package
 #
 
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2016,SC1003
 
 MODULE_DIR="${MODULE_DIR:-$(dirname "$0")}"
 source "$MODULE_DIR/core/loader.sh"
@@ -27,7 +27,6 @@ require cache/cache
 require tui/actions
 
 clear
-# shellcheck disable=SC2016,SC1003
 echo '  _                      ____            _                    '
 echo ' | |    __ _ _____   _  |  _ \ __ _  ___| | ____ _  __ _  ___ '
 echo ' | |   / _` |_  / | | | | |_) / _` |/ __| |/ / _` |/ _` |/ _ \'

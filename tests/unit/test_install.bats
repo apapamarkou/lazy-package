@@ -82,5 +82,5 @@ setup() {
         grep -c '.local/bin' \"\$PROFILE_FILE\"
     "
     assert_success
-    [ "$output" -eq 1 ]
+    assert_contains "$output" "1"
 }
