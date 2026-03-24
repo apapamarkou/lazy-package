@@ -1,4 +1,5 @@
 #!/usr/bin/env bats
+# shellcheck disable=SC1091,SC2317
 
 load '../helpers/test_utils'
 load '../helpers/mock_commands'

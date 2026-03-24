@@ -1,4 +1,5 @@
 #!/usr/bin/env bats
+# shellcheck disable=SC1091,SC2317
 # Unit tests for install script PATH handling
 
 load '../helpers/test_utils'
@@ -65,22 +66,23 @@ setup() {
 }
 
 @test "install does not duplicate PATH export in .profile" {
+    local profile="$TEST_HOME/.profile"
+    echo 'export PATH="$HOME/.local/bin:$PATH"' > "$profile"
+
     run bash -c "
         HOME=\"$TEST_HOME\"
         PATH=/usr/bin:/bin
-        PROFILE_FILE=\"\$HOME/.profile\"
-        PATH_EXPORT='export PATH=\"\$HOME/.local/bin:\$PATH\"'
-
-        echo \"\$PATH_EXPORT\" > \"\$PROFILE_FILE\"
+        PROFILE_FILE=\"$profile\"
 
         if [[ \":\$PATH:\" != *\":\$HOME/.local/bin:\"* ]]; then
-            if ! grep -qF \"\$HOME/.local/bin\" \"\$PROFILE_FILE\"; then
-                echo \"\$PATH_EXPORT\" >> \"\$PROFILE_FILE\"
+            if ! grep -qF '\$HOME/.local/bin' \"\$PROFILE_FILE\"; then
+                echo 'export PATH=\"\$HOME/.local/bin:\$PATH\"' >> \"\$PROFILE_FILE\"
             fi
         fi
 
-        grep -c '.local/bin' \"\$PROFILE_FILE\"
+        count=\$(grep -c '.local/bin' \"\$PROFILE_FILE\")
+        [[ \"\$count\" -eq 1 ]] && echo 'no_duplicate' || echo \"duplicate_count:\$count\"
     "
     assert_success
-    assert_contains "$output" "1"
+    assert_contains "$output" 'no_duplicate'
 }
